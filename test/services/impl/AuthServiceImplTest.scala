@@ -50,8 +50,8 @@ class AuthServiceImplTest extends PlaySpec with MockFactory with AsyncUtils {
   val activeUser: User = inactiveUser.activateUser
   val userId: Long = 1
   val tokenBody: String = tokenH.generateToken()
-  val nonExpiredToken: Token = Token.generate(inactiveUser.id)(timeH = () => Instant.MAX.minusMillis(1), tokenH = tokenH)
-  val expiredToken: Token = Token.generate(inactiveUser.id)(timeH = () => Instant.MIN.plusMillis(1), tokenH = tokenH)
+  val nonExpiredToken: Token = Token.generate(inactiveUser.id)(timeH = () => Instant.MAX.minusMillis(tokenTTl), tokenH = tokenH)
+  val expiredToken: Token = Token.generate(inactiveUser.id)(timeH = () => Instant.MIN.plusMillis(tokenTTl), tokenH = tokenH)
   val token: Token = Token.generate(inactiveUser.id)
 
   "confirm" should {

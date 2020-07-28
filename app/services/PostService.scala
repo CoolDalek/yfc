@@ -15,7 +15,7 @@ trait PostService {
 
   def getById(postId: UUID, currentUserId: Long): Task[Post]
 
-  def update(postId: UUID, currentUserId: Long, postDTO: PostDTO)(implicit th: TimeHelper): Task[Unit]
+  def update(postId: UUID, currentUserId: Long, postDTO: PostDTO)(implicit th: TimeHelper): Task[Post]
 
   def delete(postId: UUID, currentUserId: Long): Task[Unit]
 

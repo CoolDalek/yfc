@@ -4,11 +4,10 @@ import java.util.UUID
 
 import models.Post
 import monix.eval.Task
-import reactivemongo.api.commands.WriteResult
 
 trait PostDAO {
 
-  def create(post: Post): Task[WriteResult]
+  def create(post: Post): Task[Option[Int]]
 
   def getAll(authorId: Long): Task[Seq[Post]]
 

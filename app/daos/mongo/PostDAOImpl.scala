@@ -9,7 +9,6 @@ import monix.eval.Task
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.bson.BSONDocument
 import reactivemongo.api.bson.collection.BSONCollection
-import reactivemongo.api.commands.WriteResult
 
 import scala.concurrent.ExecutionContext
 
@@ -24,8 +23,8 @@ class PostDAOImpl @Inject()(reactiveMongoApi: ReactiveMongoApi)
 
   private def posts: Task[BSONCollection] = reactiveMongoApi.database.map(_.collection("post")).wrapEx
 
-  override def create(post: Post): Task[WriteResult] = posts.flatMap {
-    _.insert.one(post).wrapEx
+  override def create(post: Post): Task[Option[Int]] = posts.flatMap {
+    _.insert.one(post).map(_.code).wrapEx
   }
 
   override def getAll(authorId: Long): Task[Seq[Post]] = posts.flatMap {

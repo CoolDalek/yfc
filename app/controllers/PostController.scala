@@ -31,7 +31,7 @@ class PostController @Inject()(cc: ControllerComponents, postService: PostServic
   }
 
   def update(postId: UUID): Action[AnyContent] = userActionWithForm(PostDTO.form) {request =>
-    postService.update(postId, request.userId, request.parsedBody).map(_ => Ok)
+    postService.update(postId, request.userId, request.parsedBody).map(post => Ok(post.toJson))
   }
 
   def delete(postId: UUID): Action[AnyContent] = userAction {request =>

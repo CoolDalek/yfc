@@ -117,9 +117,9 @@ class PostControllerTest extends PlaySpec with MockFactory with AsyncUtils  {
     "return Ok" in {
       (postServiceMock.update(_: UUID, _: Long, _: PostDTO)(_: TimeHelper))
         .expects(postId, userId, correctDTO, TimeHelper.defaultTimeHelper)
-        .returns(Task.now(()))
+        .returns(Task.now(post))
 
-      controller.update(postId).apply(correctRequest).get mustBe Ok
+      controller.update(postId).apply(correctRequest).get mustBe Ok(post.toJson)
     }
 
     "return Unauthorized" in {
