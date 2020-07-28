@@ -1,6 +1,6 @@
 package models.dto
 
-import helpers.TimeHelper
+import helpers.{BCryptHelper, TimeHelper}
 import models.User
 
 case class UserDTO(
@@ -9,13 +9,15 @@ case class UserDTO(
                     password: String
                   ) {
 
-  def toUser()(implicit th: TimeHelper) = {
+  import UserDTO._
+
+  def toUser()(implicit th: TimeHelper, BCh: BCryptHelper): User = {
     val now = th.now()
     User(
       id = -1,
       nickname = this.nickname,
       email = this.email,
-      password = this.password,
+      password = BCh.encrypt(this.password, BCryptRounds),
       isActive = false,
       createdAt = now,
       lastUpdated = now
@@ -36,5 +38,7 @@ object UserDTO {
       "password" -> nonEmptyText(8, 64)
     )(UserDTO.apply)(UserDTO.unapply)
   )
+
+  val BCryptRounds: Int = 14
 
 }

@@ -55,7 +55,7 @@ DELETE      /api/auth/signout       controllers.AuthController.signOut
 #  '200':
 #    description: Success
 #  '406':
-#   description: Token expired
+#   description: Token expired or broken
 #  '500':
 #    description: Internal server error
 ###

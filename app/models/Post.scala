@@ -16,8 +16,8 @@ case class Post(
                  lastUpdated: Instant
                ) {
 
-  def update(dto: PostDTO)(implicit th: TimeHelper): Post = this.copy(
-    authorId = dto.authorId,
+  def update(dto: PostDTO, authorId: Long)(implicit th: TimeHelper): Post = this.copy(
+    authorId = authorId,
     title = dto.title,
     body = dto.body,
     lastUpdated = th.now()

@@ -22,9 +22,7 @@ abstract class ControllerUtils(cc: ControllerComponents)
 
   def actionWithForm[A](form: Form[A])(block: CustomRequest[A] => Task[Result]): Action[AnyContent] = simpleAction { implicit request =>
     form.bindFromRequest().fold(
-      formWithErrors => {
-        Task.now(UnprocessableEntity(s"Wrong json: $formWithErrors"))
-      },
+      formWithErrors => Task.raiseError(WrongFormException(formWithErrors.errors)),
       model => block(CustomRequest(None, Some(model), request))
     )
   }

@@ -3,7 +3,7 @@ package services.impl
 import com.github.t3hnar.bcrypt._
 import daos.{TokenDAO, UserDAO}
 import exceptions.Exceptions._
-import helpers.TimeHelper
+import helpers.{BCryptHelper, TimeHelper}
 import javax.inject.{Inject, Singleton}
 import models.dto.{SignInDTO, UserDTO}
 import models.{Token, User}
@@ -16,7 +16,7 @@ class AuthServiceImpl @Inject()(tokenDAO: TokenDAO, userDAO: UserDAO, mailerServ
 
   def confirm(tokenBody: String)(implicit th: TimeHelper): Task[Unit] = {
 
-    implicit val expirationTime = config.get[Long]("tokenTTl")
+    implicit val expirationTime: Long = config.get[Long]("tokenTTl")
     tokenDAO.getByBody(tokenBody).flatMap {
 
       case None => Task.raiseError(TokenBrokenOrExpired)
@@ -43,8 +43,8 @@ class AuthServiceImpl @Inject()(tokenDAO: TokenDAO, userDAO: UserDAO, mailerServ
     }
   }
 
-  def signUp(dto: UserDTO)(implicit th: TimeHelper): Task[Unit] = {
-    implicit val expirationTime = config.get[Long]("tokenTTl")
+  def signUp(dto: UserDTO)(implicit th: TimeHelper, BCh: BCryptHelper): Task[Unit] = {
+    implicit val expirationTime: Long = config.get[Long]("tokenTTl")
     (for {
       userOption <- userDAO.getByEmail(dto.email)
       tokenOption <- userOption match {
