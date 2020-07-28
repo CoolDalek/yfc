@@ -17,7 +17,7 @@ class PostController @Inject()(cc: ControllerComponents, postService: PostServic
                               (implicit ex: ExecutionContext, sc: Scheduler) extends ControllerUtils(cc) {
 
   def create: Action[AnyContent] = userActionWithForm(PostDTO.form) { request =>
-    postService.create(request.userId, request.parsedBody).map(_ => Ok)
+    postService.create(request.userId, request.parsedBody).map(post => Ok(post.toJson))
   }
 
   def getAll: Action[AnyContent] = userAction { request =>
@@ -27,7 +27,7 @@ class PostController @Inject()(cc: ControllerComponents, postService: PostServic
   }
 
   def getById(postId: UUID): Action[AnyContent] = userAction {request =>
-    postService.getById(postId, request.userId).map(_ => Ok)
+    postService.getById(postId, request.userId).map(post => Ok(post.toJson))
   }
 
   def update(postId: UUID): Action[AnyContent] = userActionWithForm(PostDTO.form) {request =>

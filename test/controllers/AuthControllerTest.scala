@@ -25,7 +25,7 @@ class AuthControllerTest extends PlaySpec with MockFactory with AsyncUtils {
 
   val authServiceMock: AuthService = mock[AuthService]
 
-  val controller = new AuthController(stubControllerComponents(), authServiceMock)
+  val controller: AuthController = new AuthController(stubControllerComponents(), authServiceMock)
 
   "singIn" should {
 

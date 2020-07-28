@@ -62,11 +62,12 @@ abstract class ControllerUtils(cc: ControllerComponents)
     //409
     case UserAlreadyExist(msg) => Conflict(msg)
 
+    //417
+    case WrongCredentials => ExpectationFailed
+
     //422
     case WrongFormException(e) => UnprocessableEntity("Wrong json " + e)
 
-    //417
-    case WrongCredentials => ExpectationFailed
 
     //500
     case ex: Throwable =>
