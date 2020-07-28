@@ -5,7 +5,7 @@
 #tags:
 #- Auth
 #summary: Sign in
-#operationId: Signin
+#operationId: SignIn
 #consumes: application/json
 #produces:
 #- text/plain
@@ -32,7 +32,7 @@ POST        /api/auth/signin        controllers.AuthController.signIn
 #tags:
 #- Auth
 #summary: Sign out
-#operationId: Signout
+#operationId: SignOut
 #produces:
 #- text/plain
 #responses:
@@ -47,7 +47,7 @@ DELETE      /api/auth/signout       controllers.AuthController.signOut
 #tags:
 #- Auth
 #summary: Email confirmation
-#operationId: confirm
+#operationId: Confirm
 #consumes: application/text
 #produces:
 #- application/text
@@ -65,7 +65,7 @@ GET         /api/auth/confirm_email/:token       controllers.AuthController.conf
 #tags:
 #- Auth
 #summary: Sign up
-#operationId: signUp
+#operationId: SignUp
 #consumes: application/json
 #produces:
 #- text/plain
@@ -131,7 +131,7 @@ POST        /api/post/create        controllers.PostController.create
 #  '500':
 #    description: Internal server error
 ###
-GET      /api/auth/getAll       controllers.PostController.getAll
+GET      /api/post/getAll       controllers.PostController.getAll
 
 ###
 #tags:
@@ -151,7 +151,7 @@ GET      /api/auth/getAll       controllers.PostController.getAll
 #  '500':
 #    description: Internal server error
 ###
-GET         /api/auth/get/:id       controllers.PostController.getById(id: java.util.UUID)
+GET         /api/post/get/:id       controllers.PostController.getById(id: java.util.UUID)
 
 ###
 #tags:
@@ -178,7 +178,7 @@ GET         /api/auth/get/:id       controllers.PostController.getById(id: java.
 #  '500':
 #    description: Internal server error
 ###
-POST         /api/auth/update/:id       controllers.PostController.update(id: java.util.UUID)
+POST         /api/post/update/:id       controllers.PostController.update(id: java.util.UUID)
 
 ###
 #tags:
@@ -198,7 +198,7 @@ POST         /api/auth/update/:id       controllers.PostController.update(id: ja
 #  '500':
 #    description: Internal server error
 ###
-DELETE         /api/auth/update/:id       controllers.PostController.delete(id: java.util.UUID)
+DELETE         /api/post/update/:id       controllers.PostController.delete(id: java.util.UUID)
 
 ### NoDocs ###
 GET        /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)

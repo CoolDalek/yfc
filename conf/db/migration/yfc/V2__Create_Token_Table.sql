@@ -3,5 +3,5 @@ CREATE TABLE token
 (
     user_id   BIGINT REFERENCES users ON DELETE CASCADE,
     body      TEXT UNIQUE NOT NULL,
-    createdAt TIMESTAMP DEFAULT now()
+    created_at TIMESTAMP DEFAULT now()
 );
