@@ -1,0 +1,14 @@
+swagger: "2.0"
+host: "localhost:9000"
+consumes:
+  - application/json
+  - application/text
+produces:
+  - application/json
+  - application/text
+securityDefinitions:
+  Cookie:
+    description: "Play cookie-based authentication"
+    type: apiKey,
+    in: header,
+    name: Cookie

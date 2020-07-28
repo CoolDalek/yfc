@@ -1,0 +1,207 @@
+# ======================================================================================================================
+# =============================================== A U T H ==============================================================
+# ======================================================================================================================
+###
+#tags:
+#- Auth
+#summary: Sign in
+#operationId: Signin
+#consumes: application/json
+#produces:
+#- text/plain
+#parameters:
+#- in: body
+#  description: dto for sign in
+#  name: SignInDTO
+#  required: true
+#  schema:
+#    "$ref": "#/definitions/models.dto.SignInDTO"
+#responses:
+#  '200':
+#    description: success
+#  '417':
+#    description: Wrong Credentials
+#  '422':
+#    description: Wrong json passed
+#  '500':
+#    description: Internal server error
+###
+POST        /api/auth/signin        controllers.AuthController.signIn
+
+###
+#tags:
+#- Auth
+#summary: Sign out
+#operationId: Signout
+#produces:
+#- text/plain
+#responses:
+#  '200':
+#    description: success
+#  '500':
+#    description: Internal server error
+###
+DELETE      /api/auth/signout       controllers.AuthController.signOut
+
+###
+#tags:
+#- Auth
+#summary: Email confirmation
+#operationId: confirm
+#consumes: application/text
+#produces:
+#- application/text
+#responses:
+#  '200':
+#    description: Success
+#  '406':
+#   description: Token expired
+#  '500':
+#    description: Internal server error
+###
+GET         /api/auth/confirm_email/:token       controllers.AuthController.confirm(token)
+
+###
+#tags:
+#- Auth
+#summary: Sign up
+#operationId: signUp
+#consumes: application/json
+#produces:
+#- text/plain
+#parameters:
+#- in: body
+#  description: dto for sign up
+#  name: UserDTO
+#  required: true
+#  schema:
+#    "$ref": "#/definitions/models.dto.UserDTO"
+#responses:
+#  '200':
+#    description: Success
+#  '409':
+#   description: User already exist
+#  '422':
+#    description: Wrong json passed
+#  '500':
+#    description: Internal server error
+###
+POST        /api/auth/signup        controllers.AuthController.signUp
+
+# ======================================================================================================================
+# =============================================== P O S T ==============================================================
+# ======================================================================================================================
+###
+#tags:
+#- Post
+#summary: Create
+#operationId: Create
+#consumes: application/json
+#produces:
+#- text/plain
+#parameters:
+#- in: body
+#  description: dto for post creation
+#  name: PostDTO
+#  required: true
+#  schema:
+#    "$ref": "#/definitions/models.dto.PostDTO"
+#responses:
+#  '200':
+#    description: success
+#  '401':
+#    description: Unauthorized
+#  '422':
+#    description: Wrong json passed
+#  '500':
+#    description: Internal server error
+###
+POST        /api/post/create        controllers.PostController.create
+
+###
+#tags:
+#- Post
+#summary: Get all
+#operationId: GetAll
+#responses:
+#  '200':
+#    description: success
+#  '401':
+#    description: Unauthorized
+#  '500':
+#    description: Internal server error
+###
+GET      /api/auth/getAll       controllers.PostController.getAll
+
+###
+#tags:
+#- Post
+#summary: Get by id
+#operationId: GetById
+#consumes: application/text
+#responses:
+#  '200':
+#    description: Success
+#  '401':
+#    description: Unauthorized
+#  '403':
+#    description: Forbidden
+#  '404':
+#    description: NotFound
+#  '500':
+#    description: Internal server error
+###
+GET         /api/auth/get/:id       controllers.PostController.getById(id: java.util.UUID)
+
+###
+#tags:
+#- Post
+#summary: Update
+#operationId: Update
+#consumes: application/json
+#parameters:
+#- in: body
+#  description: dto for post updating
+#  name: PostDTO
+#  required: true
+#  schema:
+#    "$ref": "#/definitions/models.dto.PostDTO"
+#responses:
+#  '200':
+#    description: Success
+#  '401':
+#    description: Unauthorized
+#  '403':
+#    description: Forbidden
+#  '404':
+#    description: NotFound
+#  '500':
+#    description: Internal server error
+###
+POST         /api/auth/update/:id       controllers.PostController.update(id: java.util.UUID)
+
+###
+#tags:
+#- Post
+#summary: Update
+#operationId: Update
+#consumes: application/json
+#responses:
+#  '200':
+#    description: Success
+#  '401':
+#    description: Unauthorized
+#  '403':
+#    description: Forbidden
+#  '404':
+#    description: NotFound
+#  '500':
+#    description: Internal server error
+###
+DELETE         /api/auth/update/:id       controllers.PostController.delete(id: java.util.UUID)
+
+### NoDocs ###
+GET        /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
+
+### NoDocs ###
+GET        /assets/*file                 controllers.Assets.versioned(path="/public", file: Asset)
