@@ -47,6 +47,7 @@ class PostControllerTest extends PlaySpec with MockFactory with AsyncUtils  {
   val authorizedRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(CustomRequest.CookieUserId -> userId.toString)
   val post: Post = correctDTO.toPost(userId)
   val postId: UUID = UUID.randomUUID()
+  val wrongId: String = "wrongID"
 
   "create" should {
 
@@ -89,25 +90,29 @@ class PostControllerTest extends PlaySpec with MockFactory with AsyncUtils  {
     "return Ok with post" in {
       (postServiceMock.getById(_: UUID, _: Long)) expects(postId, userId) returns Task.now(post)
 
-      controller.getById(postId).apply(authorizedRequest).get mustBe Ok(post.toJson)
+      controller.getById(postId.toString).apply(authorizedRequest).get mustBe Ok(post.toJson)
     }
 
     "return Unauthorized" in {
-      controller.getById(postId).apply(unauthorizedRequest).get mustBe Unauthorized
+      controller.getById(postId.toString).apply(unauthorizedRequest).get mustBe Unauthorized
     }
 
     "return Forbidden" in {
       (postServiceMock.getById(_: UUID, _: Long))
         .expects(postId, userId) returns Task.raiseError(ForbiddenException("Not your post"))
 
-      controller.getById(postId).apply(authorizedRequest).get mustBe Forbidden("Not your post")
+      controller.getById(postId.toString).apply(authorizedRequest).get mustBe Forbidden("Not your post")
     }
 
     "return NotFound" in {
       (postServiceMock.getById(_: UUID, _: Long))
         .expects(postId, userId) returns Task.raiseError(NotFoundException("Post", s"id = $postId"))
 
-      controller.getById(postId).apply(authorizedRequest).get mustBe NotFound(s"Post with id = $postId not found!")
+      controller.getById(postId.toString).apply(authorizedRequest).get mustBe NotFound(s"Post with id = $postId not found!")
+    }
+
+    "return UnprocessableEntity(Wrong id)" in {
+      controller.getById(wrongId).apply(authorizedRequest).get mustBe UnprocessableEntity("Wrong id")
     }
 
   }
@@ -119,11 +124,11 @@ class PostControllerTest extends PlaySpec with MockFactory with AsyncUtils  {
         .expects(postId, userId, correctDTO, TimeHelper.defaultTimeHelper)
         .returns(Task.now(post))
 
-      controller.update(postId).apply(correctRequest).get mustBe Ok(post.toJson)
+      controller.update(postId.toString).apply(correctRequest).get mustBe Ok(post.toJson)
     }
 
     "return Unauthorized" in {
-      controller.update(postId).apply(unauthorizedRequest).get mustBe Unauthorized
+      controller.update(postId.toString).apply(unauthorizedRequest).get mustBe Unauthorized
     }
 
     "return Forbidden" in {
@@ -131,7 +136,7 @@ class PostControllerTest extends PlaySpec with MockFactory with AsyncUtils  {
         .expects(postId, userId, correctDTO, TimeHelper.defaultTimeHelper)
         .returns(Task.raiseError(ForbiddenException("Not your post")))
 
-      controller.update(postId).apply(correctRequest).get mustBe Forbidden("Not your post")
+      controller.update(postId.toString).apply(correctRequest).get mustBe Forbidden("Not your post")
     }
 
     "return NotFound" in {
@@ -139,7 +144,11 @@ class PostControllerTest extends PlaySpec with MockFactory with AsyncUtils  {
         .expects(postId, userId, correctDTO, TimeHelper.defaultTimeHelper)
         .returns(Task.raiseError(NotFoundException("Post", s"id = $postId")))
 
-      controller.update(postId).apply(correctRequest).get mustBe NotFound(s"Post with id = $postId not found!")
+      controller.update(postId.toString).apply(correctRequest).get mustBe NotFound(s"Post with id = $postId not found!")
+    }
+
+    "return UnprocessableEntity(Wrong id)" in {
+      controller.update(wrongId).apply(correctRequest).get mustBe UnprocessableEntity("Wrong id")
     }
 
   }
@@ -149,25 +158,29 @@ class PostControllerTest extends PlaySpec with MockFactory with AsyncUtils  {
     "return Ok" in {
       (postServiceMock.delete(_: UUID, _: Long)) expects(postId, userId) returns Task.now(())
 
-      controller.delete(postId).apply(authorizedRequest).get mustBe Ok
+      controller.delete(postId.toString).apply(authorizedRequest).get mustBe Ok
     }
 
     "return Unauthorized" in {
-      controller.delete(postId).apply(unauthorizedRequest).get mustBe Unauthorized
+      controller.delete(postId.toString).apply(unauthorizedRequest).get mustBe Unauthorized
     }
 
     "return Forbidden" in {
       (postServiceMock.delete(_: UUID, _: Long)).expects(postId, userId)
         .returns(Task.raiseError(ForbiddenException("Not your post")))
 
-      controller.delete(postId).apply(authorizedRequest).get mustBe Forbidden("Not your post")
+      controller.delete(postId.toString).apply(authorizedRequest).get mustBe Forbidden("Not your post")
     }
 
     "return NotFound" in {
       (postServiceMock.delete(_: UUID, _: Long)).expects(postId, userId)
         .returns(Task.raiseError(NotFoundException("Post", s"id = $postId")))
 
-      controller.delete(postId).apply(authorizedRequest).get mustBe NotFound(s"Post with id = $postId not found!")
+      controller.delete(postId.toString).apply(authorizedRequest).get mustBe NotFound(s"Post with id = $postId not found!")
+    }
+
+    "return UnprocessableEntity(Wrong id)" in {
+      controller.delete(wrongId).apply(authorizedRequest).get mustBe UnprocessableEntity("Wrong id")
     }
 
   }

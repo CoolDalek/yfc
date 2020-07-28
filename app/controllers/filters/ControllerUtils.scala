@@ -67,6 +67,7 @@ abstract class ControllerUtils(cc: ControllerComponents)
 
     //422
     case WrongFormException(e) => UnprocessableEntity("Wrong json " + e)
+    case e: IllegalArgumentException => UnprocessableEntity("Wrong id")
 
 
     //500

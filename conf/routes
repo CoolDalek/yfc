@@ -1,6 +1,7 @@
 # ======================================================================================================================
 # =============================================== A U T H ==============================================================
 # ======================================================================================================================
+
 ###
 #tags:
 #- Auth
@@ -91,6 +92,7 @@ POST        /api/auth/signup        controllers.AuthController.signUp
 # ======================================================================================================================
 # =============================================== P O S T ==============================================================
 # ======================================================================================================================
+
 ###
 #tags:
 #- Post
@@ -148,10 +150,12 @@ GET      /api/post/getAll       controllers.PostController.getAll
 #    description: Forbidden
 #  '404':
 #    description: NotFound
+#  '422':
+#    description: UnprocessableEntity
 #  '500':
 #    description: Internal server error
 ###
-GET         /api/post/get/:id       controllers.PostController.getById(id: java.util.UUID)
+GET         /api/post/get/:id       controllers.PostController.getById(id)
 
 ###
 #tags:
@@ -175,16 +179,18 @@ GET         /api/post/get/:id       controllers.PostController.getById(id: java.
 #    description: Forbidden
 #  '404':
 #    description: NotFound
+#  '422':
+#    description: UnprocessableEntity
 #  '500':
 #    description: Internal server error
 ###
-POST         /api/post/update/:id       controllers.PostController.update(id: java.util.UUID)
+POST         /api/post/update/:id       controllers.PostController.update(id)
 
 ###
 #tags:
 #- Post
-#summary: Update
-#operationId: Update
+#summary: Delete
+#operationId: Delete
 #consumes: application/json
 #responses:
 #  '200':
@@ -195,10 +201,12 @@ POST         /api/post/update/:id       controllers.PostController.update(id: ja
 #    description: Forbidden
 #  '404':
 #    description: NotFound
+#  '422':
+#    description: UnprocessableEntity
 #  '500':
 #    description: Internal server error
 ###
-DELETE         /api/post/update/:id       controllers.PostController.delete(id: java.util.UUID)
+DELETE         /api/post/delete/:id       controllers.PostController.delete(id)
 
 ### NoDocs ###
 GET        /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
