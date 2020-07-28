@@ -2,7 +2,7 @@ package controllers
 
 import controllers.filters.CustomRequest
 import exceptions.Exceptions.{UserAlreadyExist, WrongCredentials}
-import helpers.{BCryptHelper, TimeHelper}
+import helpers.{BCryptHelper, TimeHelper, TokenHelper}
 import models.dto.{SignInDTO, UserDTO}
 import monix.eval.Task
 import monix.execution.Scheduler
@@ -91,8 +91,8 @@ class AuthControllerTest extends PlaySpec with MockFactory with AsyncUtils {
       val correctRequest = fakeSignUpRequest("nick", "some@mail.com", "12345678")
       val correctDTO = UserDTO.form.bindFromRequest()(correctRequest).value.get
 
-      (authServiceMock.signUp(_: UserDTO)(_: TimeHelper, _:BCryptHelper))
-        .expects(correctDTO, TimeHelper.defaultTimeHelper, BCryptHelper.defaultBCryptHelper)
+      (authServiceMock.signUp(_: UserDTO)(_: TimeHelper, _:TokenHelper, _:BCryptHelper))
+        .expects(correctDTO, TimeHelper.defaultTimeHelper, TokenHelper.defaultTokenHelper, BCryptHelper.defaultBCryptHelper)
         .returns(Task.now(()))
 
       controller.signUp.apply(correctRequest).get mustBe Ok
@@ -102,8 +102,8 @@ class AuthControllerTest extends PlaySpec with MockFactory with AsyncUtils {
       val correctRequest = fakeSignUpRequest("nick", "some@mail.com", "12345678")
       val correctDTO = UserDTO.form.bindFromRequest()(correctRequest).value.get
 
-      (authServiceMock.signUp(_: UserDTO)(_: TimeHelper, _:BCryptHelper))
-        .expects(correctDTO, TimeHelper.defaultTimeHelper, BCryptHelper.defaultBCryptHelper)
+      (authServiceMock.signUp(_: UserDTO)(_: TimeHelper, _:TokenHelper, _:BCryptHelper))
+        .expects(correctDTO, TimeHelper.defaultTimeHelper, TokenHelper.defaultTokenHelper, BCryptHelper.defaultBCryptHelper)
         .returns(Task.raiseError(UserAlreadyExist()))
 
       controller.signUp.apply(correctRequest).get mustBe Conflict("User already exist")

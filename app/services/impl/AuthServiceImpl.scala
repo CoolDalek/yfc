@@ -3,7 +3,7 @@ package services.impl
 import com.github.t3hnar.bcrypt._
 import daos.{TokenDAO, UserDAO}
 import exceptions.Exceptions._
-import helpers.{BCryptHelper, TimeHelper}
+import helpers.{BCryptHelper, TimeHelper, TokenHelper}
 import javax.inject.{Inject, Singleton}
 import models.dto.{SignInDTO, UserDTO}
 import models.{Token, User}
@@ -43,7 +43,7 @@ class AuthServiceImpl @Inject()(tokenDAO: TokenDAO, userDAO: UserDAO, mailerServ
     }
   }
 
-  def signUp(dto: UserDTO)(implicit th: TimeHelper, BCh: BCryptHelper): Task[Unit] = {
+  def signUp(dto: UserDTO)(implicit timeH: TimeHelper, tokenH: TokenHelper, BCh: BCryptHelper): Task[Unit] = {
     implicit val expirationTime: Long = config.get[Long]("tokenTTl")
     (for {
       userOption <- userDAO.getByEmail(dto.email)
@@ -71,7 +71,7 @@ class AuthServiceImpl @Inject()(tokenDAO: TokenDAO, userDAO: UserDAO, mailerServ
     }).flatten
   }
 
-  private def createAndSendToken(user: User): Task[Unit] =
+  private def createAndSendToken(user: User)(implicit tokenH: TokenHelper, timeHelper: TimeHelper): Task[Unit] =
     tokenDAO.create(Token.generate(user.id)).flatMap { token =>
       mailerService.sendMail(user.email, token.body)
     }
