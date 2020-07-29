@@ -25,7 +25,7 @@ class PostServiceImpl @Inject()(postDAO: PostDAO) extends PostService {
 
   override def update(postId: UUID, currentUserId: Long, postDTO: PostDTO)(implicit th: TimeHelper): Task[Post] =
     ifExistsAndOwner(postId, currentUserId) { post =>
-      postDAO.update(post.update(postDTO, currentUserId)).map(_.get)
+      postDAO.update(post.update(postDTO, currentUserId))
     }
 
   override def delete(postId: UUID, currentUserId: Long): Task[Unit] = ifExistsAndOwner(postId, currentUserId) { _ =>

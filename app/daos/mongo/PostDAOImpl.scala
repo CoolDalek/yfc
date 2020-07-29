@@ -3,6 +3,7 @@ package daos.mongo
 import java.util.UUID
 
 import daos.PostDAO
+import exceptions.Exceptions.DbResultException
 import javax.inject.{Inject, Singleton}
 import models.Post
 import monix.eval.Task
@@ -35,7 +36,7 @@ class PostDAOImpl @Inject()(reactiveMongoApi: ReactiveMongoApi)
     _.find(BSONDocument("id" -> id)).one[Post].wrapEx
   }
 
-  override def update(post: Post): Task[Option[Post]] = {
+  override def update(post: Post): Task[Post] = {
     val updateModifier = BSONDocument(
       f"$$set" -> BSONDocument(
         "title" -> post.title,
@@ -48,14 +49,20 @@ class PostDAOImpl @Inject()(reactiveMongoApi: ReactiveMongoApi)
         selector = BSONDocument("id" -> post.id),
         update = updateModifier,
         fetchNewObject = true
-      ).map(_.result[Post]).wrapEx
+      ).map(_.result[Post]).wrapEx.flatMap {
+        case None => Task.raiseError(DbResultException)
+        case Some(post) => Task.now(post)
+      }
     }
   }
 
-  override def delete(id: UUID): Task[Option[Post]] = posts.flatMap {
+  override def delete(id: UUID): Task[Post] = posts.flatMap {
     _.findAndRemove(
       selector = BSONDocument("id" -> id)
-    ).map(_.result[Post]).wrapEx
+    ).map(_.result[Post]).wrapEx.flatMap {
+      case None => Task.raiseError(DbResultException)
+      case Some(post) => Task.now(post)
+    }
   }
 
 }

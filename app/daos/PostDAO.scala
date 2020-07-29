@@ -13,8 +13,8 @@ trait PostDAO {
 
   def getById(id: UUID): Task[Option[Post]]
 
-  def update(post: Post): Task[Option[Post]]
+  def update(post: Post): Task[Post]
 
-  def delete(id: UUID): Task[Option[Post]]
+  def delete(id: UUID): Task[Post]
 
 }

@@ -24,7 +24,7 @@ class PostServiceImplTest extends PlaySpec with MockFactory with AsyncUtils {
   val postDAOMock: PostDAO = mock[PostDAO]
   val service = new PostServiceImpl(postDAOMock)
 
-  val userId: Long = 1;
+  val userId: Long = 1
   val postDTO: PostDTO = PostDTO("title", "body")
   val post: Post = postDTO.toPost(userId)
   val postDTOMock: PostDTO = mock[PostDTO]
@@ -78,7 +78,7 @@ class PostServiceImplTest extends PlaySpec with MockFactory with AsyncUtils {
 
     "return post" in {
       postDAOMock.getById _ expects post.id returns Task.now(Some(post))
-      postDAOMock.update _ expects post returns Task.now(Some(post))
+      postDAOMock.update _ expects post returns Task.now(post)
 
       service.update(post.id, userId, postDTO).get mustBe post
     }
@@ -101,7 +101,7 @@ class PostServiceImplTest extends PlaySpec with MockFactory with AsyncUtils {
 
     "return Unit" in {
       postDAOMock.getById _ expects post.id returns Task.now(Some(post))
-      postDAOMock.delete _ expects post.id returns Task.now(Some(post))
+      postDAOMock.delete _ expects post.id returns Task.now(post)
 
       service.delete(post.id, userId).get mustBe(())
     }
