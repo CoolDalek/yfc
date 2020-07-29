@@ -52,12 +52,13 @@ abstract class ControllerUtils(cc: ControllerComponents)
 
     //403
     case ForbiddenException(msg) => Forbidden(msg)
+    case UserIsNotActive => Forbidden(UserIsNotActive.getMessage)
 
     //404
     case NotFoundException(msg) => NotFound(msg)
 
     //406
-    case TokenBrokenOrExpired => NotAcceptable("Token expired or broken")
+    case TokenBrokenOrExpired => NotAcceptable("Token broken or expired")
 
     //409
     case UserAlreadyExist(msg) => Conflict(msg)

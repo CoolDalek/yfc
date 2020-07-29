@@ -31,7 +31,7 @@ object PostDTO {
 
   implicit val form: Form[PostDTO] = Form(
     mapping(
-      "title" -> text(0, 50),
+      "title" -> nonEmptyText(1, 50),
       "body" -> nonEmptyText(1, 500)
     )(PostDTO.apply)(PostDTO.unapply)
   )

@@ -20,6 +20,8 @@
 #responses:
 #  '200':
 #    description: success
+#  '403':
+#    description: Forbidden
 #  '417':
 #    description: Wrong Credentials
 #  '422':
