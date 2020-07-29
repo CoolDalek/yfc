@@ -7,7 +7,7 @@ import monix.eval.Task
 
 trait PostDAO {
 
-  def create(post: Post): Task[Option[Int]]
+  def create(post: Post): Task[Post]
 
   def getAll(authorId: Long): Task[Seq[Post]]
 

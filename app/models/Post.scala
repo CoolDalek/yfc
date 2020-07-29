@@ -8,7 +8,7 @@ import models.dto.PostDTO
 import play.api.libs.json.{JsValue, Json, OFormat}
 
 case class Post(
-                 id: UUID,
+                 _id: UUID,
                  authorId: Long,
                  title: String,
                  body: String,

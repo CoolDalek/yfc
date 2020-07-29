@@ -33,7 +33,7 @@ class PostServiceImplTest extends PlaySpec with MockFactory with AsyncUtils {
 
     "return post" in {
       (postDTOMock.toPost(_:Long)(_:TimeHelper)) expects(userId, th) returns post
-      postDAOMock.create _ expects post returns Task.now(Some(1))
+      postDAOMock.create _ expects post returns Task.now(post)
 
       service.create(userId, postDTOMock).get mustBe post
     }
@@ -55,21 +55,21 @@ class PostServiceImplTest extends PlaySpec with MockFactory with AsyncUtils {
   "getById" should {
 
     "return post" in {
-      postDAOMock.getById _ expects post.id returns Task.now(Some(post))
+      postDAOMock.getById _ expects post._id returns Task.now(Some(post))
 
-      service.getById(post.id, userId).get mustBe post
+      service.getById(post._id, userId).get mustBe post
     }
 
     "raise NotFoundException" in {
-      postDAOMock.getById _ expects post.id returns Task.now(None)
+      postDAOMock.getById _ expects post._id returns Task.now(None)
 
-      a[NotFoundException] should be thrownBy service.getById(post.id, userId).get
+      a[NotFoundException] should be thrownBy service.getById(post._id, userId).get
     }
 
     "raise ForbiddenException" in {
-      postDAOMock.getById _ expects post.id returns Task.now(Some(post))
+      postDAOMock.getById _ expects post._id returns Task.now(Some(post))
 
-      a[ForbiddenException] should be thrownBy service.getById(post.id, userId + 1).get
+      a[ForbiddenException] should be thrownBy service.getById(post._id, userId + 1).get
     }
 
   }
@@ -77,22 +77,22 @@ class PostServiceImplTest extends PlaySpec with MockFactory with AsyncUtils {
   "update" should {
 
     "return post" in {
-      postDAOMock.getById _ expects post.id returns Task.now(Some(post))
+      postDAOMock.getById _ expects post._id returns Task.now(Some(post))
       postDAOMock.update _ expects post returns Task.now(post)
 
-      service.update(post.id, userId, postDTO).get mustBe post
+      service.update(post._id, userId, postDTO).get mustBe post
     }
 
     "raise NotFoundException" in {
-      postDAOMock.getById _ expects post.id returns Task.now(None)
+      postDAOMock.getById _ expects post._id returns Task.now(None)
 
-      a[NotFoundException] should be thrownBy service.update(post.id, userId, postDTO).get
+      a[NotFoundException] should be thrownBy service.update(post._id, userId, postDTO).get
     }
 
     "raise ForbiddenException" in {
-      postDAOMock.getById _ expects post.id returns Task.now(Some(post))
+      postDAOMock.getById _ expects post._id returns Task.now(Some(post))
 
-      a[ForbiddenException] should be thrownBy service.update(post.id, userId + 1, postDTO).get
+      a[ForbiddenException] should be thrownBy service.update(post._id, userId + 1, postDTO).get
     }
 
   }
@@ -100,22 +100,22 @@ class PostServiceImplTest extends PlaySpec with MockFactory with AsyncUtils {
   "delete" should {
 
     "return Unit" in {
-      postDAOMock.getById _ expects post.id returns Task.now(Some(post))
-      postDAOMock.delete _ expects post.id returns Task.now(post)
+      postDAOMock.getById _ expects post._id returns Task.now(Some(post))
+      postDAOMock.delete _ expects post._id returns Task.now(post)
 
-      service.delete(post.id, userId).get mustBe(())
+      service.delete(post._id, userId).get mustBe(())
     }
 
     "raise NotFoundException" in {
-      postDAOMock.getById _ expects post.id returns Task.now(None)
+      postDAOMock.getById _ expects post._id returns Task.now(None)
 
-      a[NotFoundException] should be thrownBy service.delete(post.id, userId).get
+      a[NotFoundException] should be thrownBy service.delete(post._id, userId).get
     }
 
     "raise ForbiddenException" in {
-      postDAOMock.getById _ expects post.id returns Task.now(Some(post))
+      postDAOMock.getById _ expects post._id returns Task.now(Some(post))
 
-      a[ForbiddenException] should be thrownBy service.delete(post.id, userId + 1).get
+      a[ForbiddenException] should be thrownBy service.delete(post._id, userId + 1).get
     }
 
   }

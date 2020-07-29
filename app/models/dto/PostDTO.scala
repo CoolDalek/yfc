@@ -13,7 +13,7 @@ case class PostDTO(
   def toPost(authorId: Long)(implicit th: TimeHelper): Post = {
     val now = th.now()
     Post(
-      id = UUID.randomUUID(),
+      _id = UUID.randomUUID(),
       authorId = authorId,
       title = this.title,
       body = this.body,

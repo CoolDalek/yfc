@@ -16,7 +16,7 @@ class PostServiceImpl @Inject()(postDAO: PostDAO) extends PostService {
 
   override def create(currentUserId: Long, postDTO: PostDTO)(implicit th: TimeHelper): Task[Post] = {
     val post = postDTO.toPost(currentUserId)
-    postDAO.create(post).map(_ => post)
+    postDAO.create(post)
   }
 
   override def getAll(currentUserId: Long): Task[Seq[Post]] = postDAO.getAll(currentUserId)

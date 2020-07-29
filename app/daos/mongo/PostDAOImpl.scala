@@ -24,8 +24,11 @@ class PostDAOImpl @Inject()(reactiveMongoApi: ReactiveMongoApi)
 
   private def posts: Task[BSONCollection] = reactiveMongoApi.database.map(_.collection("post")).wrapEx
 
-  override def create(post: Post): Task[Option[Int]] = posts.flatMap {
-    _.insert.one(post).map(_.code).wrapEx
+  override def create(post: Post): Task[Post] = posts.flatMap {
+    _.insert.one(post).map(_.code).wrapEx.flatMap {
+      case None => Task.now(post)
+      case Some(errCode) => Task.raiseError(DbResultException)
+    }
   }
 
   override def getAll(authorId: Long): Task[Seq[Post]] = posts.flatMap {
@@ -33,7 +36,7 @@ class PostDAOImpl @Inject()(reactiveMongoApi: ReactiveMongoApi)
   }
 
   override def getById(id: UUID): Task[Option[Post]] = posts.flatMap {
-    _.find(BSONDocument("id" -> id)).one[Post].wrapEx
+    _.find(BSONDocument("_id" -> id)).one[Post].wrapEx
   }
 
   override def update(post: Post): Task[Post] = {
@@ -46,7 +49,7 @@ class PostDAOImpl @Inject()(reactiveMongoApi: ReactiveMongoApi)
     )
     posts.flatMap {
       _.findAndUpdate(
-        selector = BSONDocument("id" -> post.id),
+        selector = BSONDocument("_id" -> post._id),
         update = updateModifier,
         fetchNewObject = true
       ).map(_.result[Post]).wrapEx.flatMap {
@@ -58,7 +61,7 @@ class PostDAOImpl @Inject()(reactiveMongoApi: ReactiveMongoApi)
 
   override def delete(id: UUID): Task[Post] = posts.flatMap {
     _.findAndRemove(
-      selector = BSONDocument("id" -> id)
+      selector = BSONDocument("_id" -> id)
     ).map(_.result[Post]).wrapEx.flatMap {
       case None => Task.raiseError(DbResultException)
       case Some(post) => Task.now(post)
